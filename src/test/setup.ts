@@ -1,0 +1,30 @@
+import '@testing-library/jest-dom/vitest'
+import { cleanup } from '@testing-library/react'
+import { afterEach } from 'vitest'
+
+afterEach(() => cleanup())
+
+// jsdom does not implement these; framer-motion and the form scroll helpers use them.
+class IO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}
+Object.defineProperty(window, 'IntersectionObserver', { writable: true, value: IO })
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent: () => false,
+  }),
+})
+Element.prototype.scrollIntoView = function () {}
